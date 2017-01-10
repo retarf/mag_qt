@@ -8,6 +8,7 @@
 #include <QAbstractItemView>
 #include <QDataWidgetMapper>
 
+#include "dbconnection.h"
 #include "program.h"
 
 class Customer :public QObject
@@ -15,7 +16,7 @@ class Customer :public QObject
     Q_OBJECT
 
 public:
-    Customer();
+    Customer(DbConnection*);
 
     QSqlTableModel* model;
     QTableView* view;

@@ -15,9 +15,9 @@
 
 #include "dbconnection.h"
 
-Customer::Customer()
+Customer::Customer(DbConnection* c)
 {
-    connection = new DbConnection;
+    connection = c;
 
     model = new QSqlTableModel(this, (connection->db));
     model->setTable("customers");
@@ -27,6 +27,8 @@ Customer::Customer()
     view->setModel(&*model);
     view->setEditTriggers(QAbstractItemView::NoEditTriggers);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->sortByColumn(1, Qt::AscendingOrder);
+    view->hideColumn(0);
 
     connect(view, &QTableView::doubleClicked, this, &Customer::setwindow );
 }
@@ -100,11 +102,12 @@ void Customer::setwindow(QModelIndex index)
     layout->addWidget(but);
     layout->addWidget(anuluj);
 
-    window->setLayout(layout);
-    window->show();
-
     connect(view, &QTableView::destroyed, window, &QWidget::close );
     connect(but, &QPushButton::clicked, mapper, &QDataWidgetMapper::submit );
     connect(but, &QPushButton::clicked, window, &QWidget::close );
+    connect(but, &QPushButton::clicked, view, &QTableView::reset );
     connect(anuluj, &QPushButton::clicked, window, &QWidget::close );
+
+    window->setLayout(layout);
+    window->show();
 }
