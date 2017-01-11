@@ -17,6 +17,7 @@ public:
 
 private slots:
     void getCustomerPanel();
+    void getProductsPanel();
 };
 
 #endif // MAINWINDOW_H

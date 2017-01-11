@@ -1,5 +1,5 @@
-#ifndef CUSTOMER_H
-#define CUSTOMER_H
+#ifndef SIMPLYABSTRACTCONTROLER_H
+#define SIMPLYABSTRACTCONTROLER_H
 
 #include <QSqlTableModel>
 #include <QTableView>
@@ -11,12 +11,12 @@
 #include "dbconnection.h"
 #include "program.h"
 
-class Customer :public QObject
+class SimplyAbstractControler :public QObject
 {
     Q_OBJECT
 
 public:
-    Customer(DbConnection*);
+    SimplyAbstractControler(DbConnection*, QString);
 
     QSqlTableModel* model;
     QTableView* view;
@@ -26,7 +26,8 @@ public:
     DbConnection* connection;
 
 public slots:
-    void setwindow(QModelIndex);
+    virtual void setwindow(QModelIndex) = 0;
+    virtual void setMainConnections() = 0;
 };
 
-#endif // CUSTOMER_H
+#endif // SIMPLYABSTRACTCONTROLER_H

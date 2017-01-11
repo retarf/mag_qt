@@ -2,7 +2,11 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 
+#include <QDebug>
+
+#include "products.h"
 #include "customer.h"
+#include "customers.h"
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
@@ -21,6 +25,7 @@ MainWindow::MainWindow()
     menu->addAction(raportsMenu);
 
     QObject::connect(customersMenu, &QAction::triggered, this, &MainWindow::getCustomerPanel);
+    QObject::connect(productsMenu, &QAction::triggered, this, &MainWindow::getProductsPanel);
 
     this->setMinimumHeight(500);
     this->setMinimumWidth(900);
@@ -31,11 +36,35 @@ MainWindow::MainWindow()
 
 void MainWindow::getCustomerPanel()
 {
-    QDockWidget* central = new QDockWidget("Panel klienta", this);
+    QDockWidget* central = new QDockWidget("Panel klientów", this);
     central->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-    Customer* customer = new Customer(dbc);
-    central->setWidget(customer->view);
+    Customers* customers = new Customers(dbc, "customers");
+    central->setWidget(customers->mainwindow);
     this->addDockWidget(Qt::BottomDockWidgetArea, central);
     central->show();
 }
+
+void MainWindow::getProductsPanel()
+{
+    QDockWidget* central = new QDockWidget("Panel produktów", this);
+    central->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+    Products* products = new Products(dbc, "products");
+    central->setWidget(products->view);
+    this->addDockWidget(Qt::BottomDockWidgetArea, central);
+    central->show();
+}
+
+/*
+void MainWindow::setPanel(SimplyAbstractControler* panel, QString name)
+{
+    QDockWidget* central = new QDockWidget(name, this);
+    central->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+    panel = new Customers(dbc, "customers");
+    central->setWidget(panel->view);
+    this->addDockWidget(Qt::BottomDockWidgetArea, central);
+    central->show();
+}
+*/

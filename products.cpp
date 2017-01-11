@@ -1,6 +1,4 @@
 #include <QDebug>
-#include <QSqlError>
-
 #include <QAbstractItemView>
 #include <QPushButton>
 #include <QMouseEvent>
@@ -11,34 +9,25 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-
-#include "customer.h"
+#include <QString>
 
 #include "dbconnection.h"
+#include "simplyabstractcontroler.h"
+#include "products.h"
 
-Customer::Customer(DbConnection* c)
+Products::Products(DbConnection* c, QString table)
+    :SimplyAbstractControler(c, table)
 {
-    connection = c;
-
-    model = new QSqlTableModel(this, (connection->db));
-    model->setTable("customers");
-    model->select();
-    qDebug() << model->index(3, 1, QModelIndex()).data(Qt::DisplayRole).toString();
-
-    view = new QTableView;
-    view->setModel(&*model);
-    view->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    view->setSelectionBehavior(QAbstractItemView::SelectRows);
-    view->sortByColumn(1, Qt::AscendingOrder);
-    view->hideColumn(0);
-
-    connect(view, &QTableView::doubleClicked, this, &Customer::setwindow );
-
-    qDebug() << "dwa";
-    qDebug() << connection->db.lastError();
+    setMainConnections();
 }
 
-void Customer::setwindow(QModelIndex index)
+void Products::setMainConnections()
+{
+    connect(view, &QTableView::doubleClicked, this, &Products::setwindow );
+
+}
+
+void Products::setwindow(QModelIndex index)
 {
 
     qDebug() << index.isValid();

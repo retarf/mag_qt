@@ -15,8 +15,6 @@ DbConnection::DbConnection()
     db.setDatabaseName(db_name);
     db.setUserName(user);
     db.setPassword(db_pass);
-    //db.setPassword(db_password);
-    // bool ok = db.open();
 
     if(!db.open())
     {
