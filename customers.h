@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include "customerwindow.h"
 #include "simplyabstractcontroler.h"
 
 class Customers :public SimplyAbstractControler
@@ -22,6 +23,9 @@ public slots:
 
     QWidget* mainwindow;
     QPushButton* addbutton;
+
+private:
+    CustomerWindow* customerWindow;
 };
 
 #endif // CUSTOMERS_H

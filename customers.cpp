@@ -47,8 +47,11 @@ void Customers::setMainConnections()
 
 }
 
-void Customers::setwindow(QModelIndex index)
+void Customers::setwindow(QModelIndex i)
 {
+    customerWindow = new CustomerWindow(model, i);
+
+    /*
     QWidget* window = new QWidget;
     window->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -110,10 +113,15 @@ void Customers::setwindow(QModelIndex index)
     mapper->addMapping(m_no, 6);
 
     mapper->revert();
+
+    */
 }
 
 void Customers::setaddwindow()
 {
+    customerWindow = new CustomerWindow(model);
+
+    /*
     QWidget* window = new QWidget;
     window->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -160,6 +168,8 @@ void Customers::setaddwindow()
 
     window->setLayout(layout);
     window->show();
+
+    */
 }
 
 

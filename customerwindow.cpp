@@ -1,3 +1,11 @@
+#include <QSqlError>
+#include <QDebug>
+#include <QSqlField>
+
+#include <QSqlIndex>
+
+#include <QSqlQuery>
+
 #include "customerwindow.h"
 
 CustomerWindow::CustomerWindow(QSqlTableModel* m)
@@ -5,7 +13,10 @@ CustomerWindow::CustomerWindow(QSqlTableModel* m)
     model = m;
 
     setWindow();
-    setRecord();
+
+    connect(okButton, &QPushButton::clicked, this, &CustomerWindow::setRecord );
+    connect(okButton, &QPushButton::clicked, window, &QWidget::close );
+    connect(cancelButton, &QPushButton::clicked, window, &QWidget::close );
 }
 
 CustomerWindow::CustomerWindow(QSqlTableModel* m, QModelIndex& i)
@@ -16,15 +27,10 @@ CustomerWindow::CustomerWindow(QSqlTableModel* m, QModelIndex& i)
     setWindow();
     setMapper();
 
-    connect(but, &QPushButton::clicked, mapper, &QDataWidgetMapper::submit );
-    connect(but, &QPushButton::clicked, window, &QWidget::close );
-    connect(anuluj, &QPushButton::clicked, window, &QWidget::close );
+    connect(okButton, &QPushButton::clicked, mapper, &QDataWidgetMapper::submit );
+    connect(okButton, &QPushButton::clicked, window, &QWidget::close );
+    connect(cancelButton, &QPushButton::clicked, window, &QWidget::close );
 }
-
-QSqlRecord& getRecord();
-
-void setRecord();
-
 
 void CustomerWindow::setWindow()
 {
@@ -62,8 +68,8 @@ void CustomerWindow::setWindow()
     layout->addWidget(m_zip);
     layout->addWidget(m_vatlabel);
     layout->addWidget(m_vat);
-    layout->addWidget(but);
-    layout->addWidget(anuluj);
+    layout->addWidget(okButton);
+    layout->addWidget(cancelButton);
 
     window->setLayout(layout);
     window->show();
@@ -90,13 +96,27 @@ void CustomerWindow::setRecord()
 {
     record = new QSqlRecord;
 
-    record->isGenerated(1);
-    record->setValue("name", QVariant(m_name));
-    record->setValue("street", QVariant(m_street));
-    record->setValue("no", QVariant(m_no));
-    record->setValue("city", QVariant(m_city));
-    record->setValue("m_zip", QVariant(m_zip));
-    record->setValue("m_vat", QVariant(m_vat));
+    record = recordGenerator.getRecord();
 
-    model->setRecord(0, record);
+    QSqlIndex* i = new QSqlIndex;
+
+    record->setValue("name", QVariant(m_name->text()));
+    record->setValue("street", QVariant(m_street->text()));
+    record->setValue("no", QVariant(m_no->text()));
+    record->setValue("city", QVariant(m_city->text()));
+    record->setValue("zip", QVariant(m_zip->text()));
+    record->setValue("vat", QVariant(m_vat->text()));
+
+    model->insertRecord(0, *record);
+    model->select();
+    model->setSort(1, Qt::AscendingOrder);
+
+    qDebug() << model->tableName();
+    qDebug() << model->lastError();
+    QSqlField razzz = record->field("vat");
+    qDebug() << razzz.value().toString();
+    qDebug() << m_vat->text();
+    qDebug() << record->fieldName(3);
+    qDebug() << record->field(0);
+
 }
