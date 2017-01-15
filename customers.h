@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QItemSelectionModel>
+#include <QModelIndexList>
 
 #include "customerwindow.h"
 #include "simplyabstractcontroler.h"
@@ -17,15 +19,23 @@ public:
     virtual void setwindow(QModelIndex) final;
     virtual void setMainConnections() final;
 
-public slots:
-    void setaddwindow();
-    void saveData();
-
-    QWidget* mainwindow;
-    QPushButton* addbutton;
+    QWidget* getMainWindow();
 
 private:
+    QWidget* mainwindow;
+
+    QPushButton* addbutton;
+    QPushButton* delButton;
+
     CustomerWindow* customerWindow;
+
+    QModelIndexList selectedList;
+    QModelIndex selected;
+
+private slots:
+    void setaddwindow();
+    void saveData();
+    void removeRecords();
 };
 
 #endif // CUSTOMERS_H

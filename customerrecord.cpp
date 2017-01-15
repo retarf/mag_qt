@@ -5,9 +5,6 @@ CustomerRecord::CustomerRecord()
     record = new QSqlRecord;
 
     id = new QSqlField("id", QVariant::Int);
-    // id->setRequiredStatus(QSqlField::Required);
-//    id->setAutoValue(false);
-  //  id->setReadOnly(false);
     id->setGenerated(false);
     name = new QSqlField("name", QVariant::String);
     street = new QSqlField("street", QVariant::String);

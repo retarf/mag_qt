@@ -28,6 +28,7 @@ CustomerWindow::CustomerWindow(QSqlTableModel* m, QModelIndex& i)
     setMapper();
 
     connect(okButton, &QPushButton::clicked, mapper, &QDataWidgetMapper::submit );
+    connect(okButton, &QPushButton::clicked, this, &CustomerWindow::setSort);
     connect(okButton, &QPushButton::clicked, window, &QWidget::close );
     connect(cancelButton, &QPushButton::clicked, window, &QWidget::close );
 }
@@ -98,8 +99,6 @@ void CustomerWindow::setRecord()
 
     record = recordGenerator.getRecord();
 
-    QSqlIndex* i = new QSqlIndex;
-
     record->setValue("name", QVariant(m_name->text()));
     record->setValue("street", QVariant(m_street->text()));
     record->setValue("no", QVariant(m_no->text()));
@@ -108,15 +107,12 @@ void CustomerWindow::setRecord()
     record->setValue("vat", QVariant(m_vat->text()));
 
     model->insertRecord(0, *record);
+
+    setSort();
+}
+
+void CustomerWindow::setSort()
+{
+    model->setSort(1,Qt::AscendingOrder);
     model->select();
-    model->setSort(1, Qt::AscendingOrder);
-
-    qDebug() << model->tableName();
-    qDebug() << model->lastError();
-    QSqlField razzz = record->field("vat");
-    qDebug() << razzz.value().toString();
-    qDebug() << m_vat->text();
-    qDebug() << record->fieldName(3);
-    qDebug() << record->field(0);
-
 }

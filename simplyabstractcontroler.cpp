@@ -31,7 +31,4 @@ SimplyAbstractControler::SimplyAbstractControler(DbConnection* c, QString table)
     view->hideColumn(0);
     view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    // setMainConnections();
-
-    // connect(view, &QTableView::doubleClicked, this, &Customers::setwindow );
 }

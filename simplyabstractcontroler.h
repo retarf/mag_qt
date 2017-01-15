@@ -4,9 +4,11 @@
 #include <QSqlTableModel>
 #include <QTableView>
 #include <QModelIndex>
+#include <QModelIndexList>
 #include <QWidget>
 #include <QAbstractItemView>
 #include <QDataWidgetMapper>
+#include <QItemSelectionModel>
 
 #include "dbconnection.h"
 #include "program.h"
@@ -20,6 +22,7 @@ public:
 
     QSqlTableModel* model;
     QTableView* view;
+    QItemSelectionModel selectionModel;
 
     QDataWidgetMapper* mapper;
 

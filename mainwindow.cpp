@@ -40,7 +40,7 @@ void MainWindow::getCustomerPanel()
     central->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
     Customers* customers = new Customers(dbc, "customers");
-    central->setWidget(customers->mainwindow);
+    central->setWidget(customers->getMainWindow());
     this->addDockWidget(Qt::BottomDockWidgetArea, central);
     central->show();
 }

@@ -16,7 +16,8 @@ HEADERS += customer.h \
            products.h \
            program.h \
            simplyabstractcontroler.h \
-    customerrecord.h
+    customerrecord.h \
+    documents.h
 SOURCES += customer.cpp \
            customers.cpp \
            customerwindow.cpp \
@@ -27,6 +28,7 @@ SOURCES += customer.cpp \
            products.cpp \
            program.cpp \
            simplyabstractcontroler.cpp \
-    customerrecord.cpp
+    customerrecord.cpp \
+    documents.cpp
 
 QT += core widgets gui sql

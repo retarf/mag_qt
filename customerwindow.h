@@ -26,6 +26,7 @@ public:
 
 private slots:
     void setRecord();
+    void setSort();
 
 private:
     void setWindow();
