@@ -1,12 +1,11 @@
 #ifndef DOCUMENTS_H
 #define DOCUMENTS_H
 
-#include "simplyabstractcontroler.h"
 
-class documents :public SimplyAbstractControler
+class Documents
 {
 public:
-    documents();
+    Documents();
 };
 
 #endif // DOCUMENTS_H

@@ -1,6 +1,6 @@
 #include "documents.h"
 
-documents::documents()
+Documents::Documents()
 {
 
 }
