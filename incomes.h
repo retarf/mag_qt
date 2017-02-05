@@ -1,11 +1,15 @@
 #ifndef INCOMES_H
 #define INCOMES_H
 
+#include <QString>
 
-class Incomes
+#include "rotations.h"
+
+class Incomes :public Rotations
 {
 public:
-    Incomes();
+    Incomes(DbConnection*);
+
 };
 
 #endif // INCOMES_H

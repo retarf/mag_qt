@@ -34,7 +34,7 @@ Customers::Customers(DbConnection* c, QString table)
     delButton->update();
 
     view->setColumnWidth(1, 100);
-    view->setColumnWidth(2, 100);
+    view->setColumnWidth(2, 500);
     view->setColumnWidth(3, 100);
     view->setColumnWidth(4, 100);
     view->setColumnWidth(5, 100);

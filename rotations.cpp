@@ -1,6 +1,6 @@
 #include "rotations.h"
 
-Rotations::Rotations()
+Rotations::Rotations(DbConnection* c)
 {
-
+    connection = c;
 }

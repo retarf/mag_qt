@@ -1,11 +1,13 @@
 #ifndef EXPENDITURES_H
 #define EXPENDITURES_H
 
+#include "dbconnection.h"
+#include "rotations.h"
 
-class Expenditures
+class Expenditures :public Rotations
 {
 public:
-    Expenditures();
+    Expenditures(DbConnection*);
 };
 
 #endif // EXPENDITURES_H

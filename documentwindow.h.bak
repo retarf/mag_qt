@@ -1,0 +1,96 @@
+#ifndef DOCUMENTWINDOW_H
+#define DOCUMENTWINDOW_H
+
+#include <QObject>
+#include <QSqlTableModel>
+#include <QModelIndex>
+
+#include <QVBoxLayout>
+
+#include <QGroupBox>
+
+#include <QLabel>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QDateEdit>
+
+#include <QStringList>
+
+#include <QPushButton>
+
+#include "dbconnection.h"
+#include "incomes.h"
+#include "expenditures.h"
+
+class DocumentWindow :public QObject
+{
+    Q_OBJECT
+
+public:
+    DocumentWindow( DbConnection*, QSqlTableModel* );
+    DocumentWindow( DbConnection*, QSqlTableModel*, QModelIndex& );
+
+private slots:
+    void setRecord();
+    void setSort();
+
+private:
+    void setWindow();
+    void setMapper();
+
+    DbConnection* connection;
+
+    QString getDefaultNumber();
+    QStringList* getTypes();
+    QStringList* getCustomer();
+    void setDocumentType();
+
+    QSqlRelationalTableModel* model;
+
+    // === Document Section === //
+
+    QGroupBox* setDocumentSection();
+
+    QStringList getDocumentTypeList();
+    QString getDefaultDocumentNumber();
+
+    QComboBox* m_type;
+    QLineEdit* m_number;
+    QDateEdit* m_date;
+    QLineEdit* m_customer;  // Customer VAT //
+
+    // === END Document Section === //
+
+    QGroupBox* setCustomerSection();
+    QGroupBox* setProductsSection();
+
+    QPushButton* okButton;
+    QPushButton* cancelButton;
+
+    Rotations* m_rotations;
+
+    // ---------------------------- //
+
+    QString selectcustomervat(QString name);
+    QString selectcustomername(QString vat);
+
+    QGroupBox* setdocumentbox();
+    QGroupBox* setcustomerbox();
+
+
+private slots:
+    void chengecustomername();
+    void changecustomervat();
+
+public:
+    QString getdoctype();
+    void setdoctype(QString="WZ");
+
+    QStringList getList(QString, QString);
+    QStringList getcustomernameList();
+
+    void setwindow();
+
+};
+
+#endif // DOCUMENTWINDOW_H

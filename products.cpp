@@ -29,10 +29,6 @@ void Products::setMainConnections()
 
 void Products::setwindow(QModelIndex index)
 {
-
-    qDebug() << index.isValid();
-
-
     QWidget* window = new QWidget;
     window->setAttribute(Qt::WA_DeleteOnClose);
 

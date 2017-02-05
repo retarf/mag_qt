@@ -1,6 +1,7 @@
 #include "incomes.h"
 
-Incomes::Incomes()
+Incomes::Incomes(DbConnection* c)
+    :Rotations(c)
 {
 
 }

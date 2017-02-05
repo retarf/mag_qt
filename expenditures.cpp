@@ -1,6 +1,7 @@
 #include "expenditures.h"
 
-Expenditures::Expenditures()
+Expenditures::Expenditures(DbConnection *c)
+    :Rotations(c)
 {
 
 }

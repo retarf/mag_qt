@@ -27,10 +27,10 @@ CustomerWindow::CustomerWindow(QSqlTableModel* m, QModelIndex& i)
     setWindow();
     setMapper();
 
-    connect(okButton, &QPushButton::clicked, mapper, &QDataWidgetMapper::submit );
-    connect(okButton, &QPushButton::clicked, this, &CustomerWindow::setSort);
-    connect(okButton, &QPushButton::clicked, window, &QWidget::close );
-    connect(cancelButton, &QPushButton::clicked, window, &QWidget::close );
+    connect( okButton, &QPushButton::clicked, mapper, &QDataWidgetMapper::submit );
+    connect( okButton, &QPushButton::clicked, this, &CustomerWindow::setSort );
+    connect( okButton, &QPushButton::clicked, window, &QWidget::close );
+    connect( cancelButton, &QPushButton::clicked, window, &QWidget::close );
 }
 
 void CustomerWindow::setWindow()

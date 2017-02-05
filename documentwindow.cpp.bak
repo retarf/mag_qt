@@ -12,21 +12,20 @@
 
 #include "documentwindow.h"
 
-DocumentWindow::DocumentWindow( DbConnection* c, QSqlRelationalTableModel* m )
+DocumentWindow::DocumentWindow( DbConnection* c, QSqlTableModel* m )
 {
     connection = c;
 
     model = m;
 
-
     setWindow();
 
-    // connect( okButton, &QPushButton::clicked, this, &DocumentWindow::setRecord );
+    connect( okButton, &QPushButton::clicked, this, &DocumentWindow::setRecord );
     connect( okButton, &QPushButton::clicked, window, &QWidget::close );
     connect( cancelButton, &QPushButton::clicked, window, &QWidget::close );
 }
 
-/* DocumentWindow::CustomerWindow( DbConnection* c, QSqlTableModel* m, QModelIndex& i )
+DocumentWindow::CustomerWindow( DbConnection* c, QSqlTableModel* m, QModelIndex& i )
 {
     connection = c;
 
@@ -41,35 +40,28 @@ DocumentWindow::DocumentWindow( DbConnection* c, QSqlRelationalTableModel* m )
     connect( okButton, &QPushButton::clicked, window, &QWidget::close );
     connect( cancelButton, &QPushButton::clicked, window, &QWidget::close );
 }
-*/
 
 void DocumentWindow::setWindow()
 {
-    window = new QWidget;
+    QWidget* window = new QWidget;
     window->setAttribute(Qt::WA_DeleteOnClose);
     window->setMinimumWidth(500);
     window->setWindowTitle("DOKUMENT MAGAZYNOWY");
 
     QGridLayout* layout = new QGridLayout;
 
-    okButton = new QPushButton("Ok");
-    cancelButton = new QPushButton("Anuluj");
-
     layout->addWidget( setDocumentSection(), 0, 0, 2, 2 );
     layout->addWidget( setCustomerSection(), 2, 0, 6, 2 );
     // layout->addWidget( setRotationSection(), 2, 0, 6, 2 );
-
-    layout->addWidget( okButton );
-    layout->addWidget( cancelButton );
 
     window->setLayout(layout);
     window->show();
 }
 
 
-QStringList DocumentWindow::getTypes()
+QStringList* DocumentWindow::getTypes()
 {
-        QStringList list;
+        QStringList* list;
 
         QSqlQuery query( connection->db );
         query.prepare( "SELECT type FROM documents_types" );
@@ -80,7 +72,7 @@ QStringList DocumentWindow::getTypes()
         while ( query.next() )
         {
             row = query.value( 0 ).toString();
-            list << row;
+            *list << row;
         }
 
         return list;
@@ -95,20 +87,32 @@ QGroupBox* DocumentWindow::setDocumentSection()
     // Document type field //
 
     m_type = new QComboBox();
-    m_type->addItems( getTypes() );
+    m_type->addItems( *getTypes() );
 
     // Document number field //
 
     m_number = new QLineEdit;
     m_number->setText( getDefaultNumber() );
 
-    // Date Field //
+    // Data Field //
 
     m_date = new QDateEdit;
     m_date->setDate( QDate::currentDate() );
 
     // Field to finding customer from database //
 
+    QLineEdit* customerFind = new QLineEdit;
+    QCompleter* customerCompleter = new QCompleter( *getCustomer(), this );
+    customerCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+    customerFind->setCompleter( customerCompleter );
+
+    // Customer name field
+
+    QLineEdit* customerName = new QLineEdit;
+    QLineEdit* customerStreet = new QLineEdit;
+    QLineEdit* customerCity = new QLineEdit;
+    QLineEdit* customerZip = new QLineEdit;
+    QLineEdit* customerVAT = new QLineEdit;
 
     QLabel* doctypelab = new QLabel("Typ dokumentu");
     QLabel* docnumberlab = new QLabel("Numer");
@@ -116,6 +120,12 @@ QGroupBox* DocumentWindow::setDocumentSection()
     layout->addWidget(m_type, 0, 0);
     layout->addWidget(m_number, 0, 1);
     layout->addWidget(m_date, 0, 2);
+    layout->addWidget(customerFind, 1, 0);
+    layout->addWidget(customerName, 3,0);
+    layout->addWidget(customerStreet, 3,0);
+    layout->addWidget(customerCity, 3,0);
+    layout->addWidget(customerZip, 3,0);
+    layout->addWidget(customerVAT, 3,0);
 
     box->setLayout(layout);
 
@@ -135,56 +145,57 @@ QString DocumentWindow::getDefaultNumber()
     query.prepare("SELECT number FROM documents order by number");
     query.exec();
 
-    while ( query.last() )
-        number = query.value( 0 ).toString();
+    int row;
+
+    while ( query.next() )
+    {
+        row = query.value( 0 ).toInt();
+        list.push_back( row );
+    }
+
+    int n;
+
+    n = list.back();
+    n++;
+    number = QString::number( n );
 
     return number;
 }
 
-
-QGroupBox* DocumentWindow::setCustomerSection()
+QGroupBox* DocumentWindow::setCustoustomerSection()
 {
+    m_qlecustomer = new QLineEdit;
+    m_qlecustomer->setCompleter(m_customersList);
+
+    m_customername = new QLineEdit; // -------------------------------------------------> tu dokończyć. Ma się na wzajem uzupełniać nip lub nazwa;
+    m_customername->setCompleter(m_customernameList);
+
+    QObject::connect(m_qlecustomer, SIGNAL( editingFinished() ), this, SLOT( chengecustomername() ));
+    QObject::connect(m_customername, SIGNAL( editingFinished() ), this, SLOT( changecustomervat() ));
+
     QGroupBox* box = new QGroupBox("KONTRAHENT");
-    QGridLayout* layout = new QGridLayout;
 
-    QLineEdit* customerFind = new QLineEdit;
-    QCompleter* customerCompleter = new QCompleter( getCustomer(), this );
-    customerCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-    customerFind->setCompleter( customerCompleter );
-
-    // Customer name fields
-
+    QVBoxLayout* layout = new QVBoxLayout;
     QLabel* name = new QLabel("Nazwa");
-    QLabel* street = new QLabel("Ulica");
+    QLabel* street = new QLabel("Ulica"); //_____--------------------------------------------------------------------------------------------------------------->?>>>>>>>>>>>>>>>>>>
     QLabel* no = new QLabel("Nr");
     QLabel* zip = new QLabel("Kod pocztowy");
     QLabel* city = new QLabel("Miasto");
     QLabel* vat = new QLabel("NIP");
+    layout->addWidget(name);
+    layout->addWidget(m_customername);
 
-    m_customerName = new QLineEdit;
-    m_customerStreet = new QLineEdit;
-    m_customerNo = new QLineEdit;
-    m_customerCity = new QLineEdit;
-    m_customerZip = new QLineEdit;
-    m_customerVat = new QLineEdit;
+    layout->addWidget(street);
 
-    // QObject::connect(m_qlecustomer, SIGNAL( editingFinished() ), this, SLOT( chengecustomername() ));
-    // QObject::connect(m_customername, SIGNAL( editingFinished() ), this, SLOT( changecustomervat() ));
+    layout->addWidget(no);
 
-    layout->addWidget( customerFind, 0, 0, 1, 1, Qt::AlignJustify );
-    layout->addWidget( name, 2, 0 );
-    layout->addWidget( m_customerName, 2, 1 );
-    layout->addWidget( street, 3, 0 );
-    layout->addWidget( m_customerStreet, 3, 1 );
-    layout->addWidget( no, 4, 0 );
-    layout->addWidget( m_customerNo, 4, 1 );
-    layout->addWidget( zip, 5, 0 );
-    layout->addWidget( m_customerZip, 5, 1 );
-    layout->addWidget( city, 6, 0 );
-    layout->addWidget( m_customerCity, 6, 1 );
-    layout->addWidget( vat, 7, 0 );
-    layout->addWidget( m_customerVat, 7, 1 );
-    // layout->addStretch(1);
+    layout->addWidget(zip);
+
+    layout->addWidget(city);
+
+    layout->addWidget(vat);
+    layout->addWidget(m_qlecustomer);
+    layout->addStretch(1);
 
     box->setLayout(layout);
 
@@ -192,7 +203,10 @@ QGroupBox* DocumentWindow::setCustomerSection()
 
 }
 
-/*
+QString DocumentWindow::getdoctype()
+{
+    return m_doctype;
+}
 
 void DocumentWindow::setdoctype(QString type)
 {
@@ -228,11 +242,11 @@ QStringList DocumentWindow::getList(QString column, QString table)
 
     return list;
 }
-*/
-QStringList DocumentWindow::getCustomer()
+
+QStringList* DocumentWindow::getCustomer()
 {
 
-    QStringList list;
+    QStringList* list;
 
     QSqlQuery query( connection->db );
 
@@ -251,7 +265,7 @@ QStringList DocumentWindow::getCustomer()
     return list;
 }
 
-/*
+
 
 QString DocumentWindow::selectcustomername(QString vat)
 {

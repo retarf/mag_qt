@@ -5,8 +5,8 @@
 #include <QDebug>
 
 #include "products.h"
-#include "customer.h"
 #include "customers.h"
+#include "documents.h"
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
@@ -24,8 +24,9 @@ MainWindow::MainWindow()
     menu->addAction(documentsMenu);
     menu->addAction(raportsMenu);
 
-    QObject::connect(customersMenu, &QAction::triggered, this, &MainWindow::getCustomerPanel);
-    QObject::connect(productsMenu, &QAction::triggered, this, &MainWindow::getProductsPanel);
+    QObject::connect( customersMenu, &QAction::triggered, this, &MainWindow::getCustomerPanel);
+    QObject::connect( productsMenu, &QAction::triggered, this, &MainWindow::getProductsPanel);
+    QObject::connect( documentsMenu, &QAction::triggered, this, &MainWindow::getDocumentsPanel);
 
     this->setMinimumHeight(500);
     this->setMinimumWidth(900);
@@ -56,15 +57,14 @@ void MainWindow::getProductsPanel()
     central->show();
 }
 
-/*
-void MainWindow::setPanel(SimplyAbstractControler* panel, QString name)
+void MainWindow::getDocumentsPanel()
 {
-    QDockWidget* central = new QDockWidget(name, this);
+    QDockWidget* central = new QDockWidget("Panel dokumentów", this);
     central->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-    panel = new Customers(dbc, "customers");
-    central->setWidget(panel->view);
+    Documents* documents = new Documents(dbc, "documents");
+    central->setWidget(documents->getMainWindow());
     this->addDockWidget(Qt::BottomDockWidgetArea, central);
     central->show();
 }
-*/
+
