@@ -24,6 +24,8 @@ DocumentWindow::DocumentWindow( DbConnection* c, QSqlRelationalTableModel* m )
     // connect( okButton, &QPushButton::clicked, this, &DocumentWindow::setRecord );
     connect( okButton, &QPushButton::clicked, window, &QWidget::close );
     connect( cancelButton, &QPushButton::clicked, window, &QWidget::close );
+
+    // TEST  //
 }
 
 /* DocumentWindow::CustomerWindow( DbConnection* c, QSqlTableModel* m, QModelIndex& i )
